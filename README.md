@@ -1,2 +1,10 @@
-# Projeto-Senac
-Senac conhecimentos de git_estudos
+# Projeto Senac
+
+## Esse repositorio foi criado para estudar git pelo senac
+
+[Projeto basico de produtos]
+
+## Tecnologias utilizadas
+
+- Java
+- MySQL
