@@ -1,17 +1,21 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+package Leiloes.gui;
 
-/**
- *
- * @author Adm
- */
 public class ProdutosDTO {
     private Integer id;
     private String nome;
-    private Integer valor;
+    private Integer valor = 0;
     private String status;
+
+    public ProdutosDTO(Integer id, String nome, Integer valor, String status) {
+        this.id = id;
+        this.nome = nome;
+        this.valor = valor;
+        this.status = status;
+    }
+    
+    public ProdutosDTO(){
+        this.valor = 0;
+    }
 
     public Integer getId() {
         return id;
