@@ -5,13 +5,16 @@ import Leiloes.gui.ProdutosDTO;
 import Leiloes.gui.ProdutosDAO;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class listagemVIEW extends javax.swing.JFrame {
 
     
     public listagemVIEW() {
-        initComponents();       
+        initComponents();  
+        DefaultTableModel tableModel = montarTabela();
+        tabela.setModel(tableModel);
     }
 
     
@@ -20,7 +23,7 @@ public class listagemVIEW extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        listaProdutos = new javax.swing.JTable();
+        tabela = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -32,18 +35,9 @@ public class listagemVIEW extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        listaProdutos.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "ID", "Nome", "Valor", "Status"
-            }
-        ));
-        jScrollPane1.setViewportView(listaProdutos);
+        DefaultTableModel tableModel = montarTabela();
+        tabela.setModel(tableModel);
+        jScrollPane1.setViewportView(tabela);
 
         jLabel1.setFont(new java.awt.Font("Lucida Fax", 0, 18)); // NOI18N
         jLabel1.setText("Lista de Produtos");
@@ -51,6 +45,11 @@ public class listagemVIEW extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
         jLabel2.setText("Vender Produto (ID)");
 
+        id_produto_venda.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                id_produto_vendaKeyReleased(evt);
+            }
+        });
         jScrollPane2.setViewportView(id_produto_venda);
 
         btnVender.setText("Vender");
@@ -127,7 +126,7 @@ public class listagemVIEW extends javax.swing.JFrame {
     private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVenderActionPerformed
         String id = id_produto_venda.getText();
         
-        ProdutosDAO produtosdao = new ProdutosDAO();
+        ProdutosDAO p = new ProdutosDAO();
         
         //produtosdao.venderProduto(Integer.parseInt(id));
 
@@ -141,6 +140,47 @@ public class listagemVIEW extends javax.swing.JFrame {
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
+
+    private void id_produto_vendaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_id_produto_vendaKeyReleased
+        String idText = id_produto_venda.getText();
+        
+        if(!idText.isEmpty()) {
+            try{
+                int id = Integer.parseInt(idText);
+                
+                ProdutosDAO p = new ProdutosDAO();
+                
+                ProdutosDTO pr = ProdutosDAO.buscarPorId(id);
+                
+                DefaultTableModel tableModel = new DefaultTableModel();
+                tableModel.addColumn("ID");
+                tableModel.addColumn("Nome");
+                tableModel.addColumn("Valor");
+                tableModel.addColumn("Status");
+                
+                 tableModel.setRowCount(0);
+                 
+                  if (pr != null) {
+                      String[] rowData = {
+                        String.valueOf(pr.getId()),
+                        pr.getNome(),
+                        String.valueOf(pr.getValor()),
+                        pr.getStatus()
+                    };
+                   tableModel.addRow(rowData);
+            }else {
+                JOptionPane.showMessageDialog(null, "Produto não encontrado para o ID fornecido.");
+                  }
+                  tabela.setModel(tableModel);
+        }catch(NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "O ID deve ser um número inteiro.");
+              id_produto_venda.setText("");
+        }
+        }else {
+             JOptionPane.showMessageDialog(null, "Por favor, insira um ID para buscar.");
+        }
+     
+    }//GEN-LAST:event_id_produto_vendaKeyReleased
 
     /**
      * @param args the command line arguments
@@ -181,7 +221,7 @@ public class listagemVIEW extends javax.swing.JFrame {
      private DefaultTableModel montarTabela() {
        
         String[] colunas = {"ID", "Nome", "Valor", "Status"};
-        DefaultTableModel listaProdutos = new DefaultTableModel(colunas, 0);
+        DefaultTableModel tabela = new DefaultTableModel(colunas, 0);
 
         List<ProdutosDTO> lista = ProdutosDAO.listar();
 
@@ -196,10 +236,10 @@ public class listagemVIEW extends javax.swing.JFrame {
 
             };
 
-            listaProdutos.addRow(linha);
+            tabela.addRow(linha);
         }
 
-        return listaProdutos;
+        return tabela;
 }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnVendas;
@@ -211,7 +251,7 @@ public class listagemVIEW extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable listaProdutos;
+    private javax.swing.JTable tabela;
     // End of variables declaration//GEN-END:variables
 
 }
